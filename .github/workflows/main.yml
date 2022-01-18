@@ -8,6 +8,6 @@ jobs:
     name: 输入内容
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/my-action.yml@v1
+      - uses: ${{ github.repository }}/.github/actions/my-action.yml@main
         with:
           username: 'danyow'
