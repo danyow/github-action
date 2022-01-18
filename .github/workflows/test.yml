@@ -1,0 +1,31 @@
+name: 输入运行参数
+on:
+  workflow_dispatch:
+    inputs:
+      action_mode:
+        description: '工作流模式 [release, debug] [Android, iOS, StandaloneOSX, StandaloneLinux64, WebGL, StandaloneWindows, WSAPlayer, StandaloneWindows64, Steam]'
+        required: true
+        default: 'debug, WebGL'
+jobs:
+  
+  set_default_options:
+    name: 设置默认值
+    runs-on: ubuntu-latest
+    env:
+      ACTION_MODE: ${{ github.event.input.action_mode }}
+    outputs:
+      action_mode: ${{ steps.check.outputs.action_mode }}
+    steps:
+      -
+        name: 判断是否有输入值
+        id: check
+        run: |
+          echo 输入值为 "#ACTION_MODE"
+          if [ "$ACTION_MODE" == "" ]; then
+            echo "::set-output name=action_mode::'debug, WebGL'"
+          else
+            echo "::set-output name=action_mode::$ACTION_MODE"
+          fi
+      -
+        name: 打印
+        run: echo ${{ steps.check.outputs.action_mode }}
