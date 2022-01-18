@@ -1,5 +1,8 @@
 name: 输入运行参数
 on:
+  release:
+    types:
+      - published
   workflow_dispatch:
     inputs:
       action_mode:
