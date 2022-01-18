@@ -5,9 +5,6 @@ on:
 
 jobs:
   call_reusable:
-    name: 输入内容
-    runs-on: ubuntu-latest
-    steps:
-      - uses: danyow/github-action/.github/actions/my-action.yml@main
-        with:
-          username: 'danyow'
+    uses: danyow/github-action/.github/workflows/my-action.yml@main
+    with:
+      username: 'danyow'
