@@ -10,4 +10,4 @@ jobs:
   call_reusable:
     uses: danyow/github-action/.github/workflows/my-action.yml@main
     with:
-      username: 'danyow'
+      username: ${{ github.event.action == 'published' }}
