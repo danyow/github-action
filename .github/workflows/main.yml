@@ -1,0 +1,13 @@
+name: 重用工作流测试
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  call_reusable:
+    name: 输入内容
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/my-action@v1
+        with:
+          username: 'danyow'
