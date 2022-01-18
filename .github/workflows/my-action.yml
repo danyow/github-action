@@ -3,7 +3,7 @@ on:
     inputs:
       username:
         required: true
-        type: string
+        type: boolean
 jobs:
   reusable_workflow_job:
     name: 任务
