@@ -10,4 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 打印
-        run: echo 输入是 ${{ inputs.username }} 
+        run: |
+          echo 输入是 ${{ inputs.username }} 
+          echo ${{ github.event.action }}
