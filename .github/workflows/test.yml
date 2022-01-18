@@ -20,12 +20,15 @@ jobs:
         name: 判断是否有输入值
         id: check
         run: |
-          echo 输入值为 "#ACTION_MODE"
+          echo 输入值为 "$ACTION_MODE"
           if [ "$ACTION_MODE" == "" ]; then
+            echo 并没有检测到输入值
             echo "::set-output name=action_mode::'debug, WebGL'"
           else
+            echo 检测到有输入值
             echo "::set-output name=action_mode::$ACTION_MODE"
           fi
+          echo 完成
       -
         name: 打印
         run: echo ${{ steps.check.outputs.action_mode }}
