@@ -2,6 +2,9 @@ name: 重用工作流测试
 
 on:
   workflow_dispatch: {}
+  release:
+    type:
+      - published
 
 jobs:
   call_reusable:
