@@ -1,53 +1,65 @@
 name: 输入运行参数
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Assets/**"
+      - "Packages/**"
+      - "ProjectSettings/**"
   release:
     types:
       - published
   workflow_dispatch:
     inputs:
-      action_mode:
-        description: '工作流模式 [release, debug] [Android, iOS, StandaloneOSX, StandaloneLinux64, WebGL, StandaloneWindows, WSAPlayer, StandaloneWindows64, Steam]'
-        required: true
-        default: 'debug, WebGL'
+      releaseMode:
+        description: '工作流模式 [release, debug]'
         type: choice
         options:
-          - Android
-          - iOS
-          - StandaloneOSX
-          - StandaloneLinux64
-          - WebGL
-          - StandaloneWindows
-          - WSAPlayer
-          - StandaloneWindows64
-          - Steam
+          - release
+          - debug
+        required: true
+        default: 'debug'
       linuxTargetPlatforms:
         description: '[Android, iOS, StandaloneOSX, StandaloneLinux64, WebGL]'
         type: string
         required: true
-        default: '- Android\n- iOS\n'
+        default: 'WebGL'
+      windowTargetPlatforms:
+        description: '[StandaloneWindows, WSAPlayer]'
+        type: string
+        required: false
+        default: ''
+      win64TargetPlatform:
+        description: '[StandaloneWindows64]'
+        type: string
+        required: false
+        default: ''
 jobs:
   
   set_default_options:
     name: 设置默认值
     runs-on: ubuntu-latest
     env:
-      ACTION_MODE: ${{ github.event.input.action_mode }}
-    outputs:
-      action_mode: ${{ steps.check.outputs.action_mode }}
+      linuxTargetPlatforms: ${{ github.event.input.linuxTargetPlatforms }}
+      windowTargetPlatforms: ${{ github.event.input.windowTargetPlatforms }}
+      win64TargetPlatform: ${{ github.event.input.win64TargetPlatform }}
     steps:
       -
         name: 判断是否有输入值
         id: check
         run: |
-          echo 输入值为 "$ACTION_MODE"
-          if [ "$ACTION_MODE" == "" ]; then
+          echo 输入值为 "$linuxTargetPlatforms"
+          if [ "$linuxTargetPlatforms" == "" ]; then
             echo 并没有检测到输入值
-            echo "::set-output name=action_mode::'debug, WebGL'"
+            echo "::set-output name=linuxTargetPlatforms::'WebGL'"
           else
             echo 检测到有输入值
-            echo "::set-output name=action_mode::$ACTION_MODE"
+            array=(${linuxTargetPlatforms//, / })
+            echo "::set-output name=linuxTargetPlatforms::$array)"
+            for var in ${array[@]}
+            do
+              echo $var
+            done
           fi
           echo 完成
-      -
-        name: 打印
-        run: echo ${{ steps.check.outputs.action_mode }}
