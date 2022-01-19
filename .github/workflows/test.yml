@@ -91,18 +91,21 @@ jobs:
       -
         name: ${{ matrix.name }} 转换为数组
         uses: kanga333/json-array-builder@main
-        if: env.TARGET_VALUE == ''
+        if: env.TARGET_VALUE != ''
         id: toJSON
         with:
           str: ${{ env.TARGET_VALUE }}
           separator: ', '
       -
-        name: 打印
-        if: env.TARGET_VALUE == ''
+        name: 赋值
+        if: env.TARGET_VALUE != ''
         env:
           JSON: ${{ toJSON(steps.toJSON.outputs.build) }}
         run: |
           echo "TARGET_JSON=$JSON" >> $GITHUB_ENV
+      -
+        name: 打印
+        run: |
           echo $TARGET_JSON
     
     outputs:
