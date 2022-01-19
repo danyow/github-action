@@ -16,21 +16,22 @@ on:
         description: '工作流模式 [release, debug]'
         type: choice
         options:
-          - release
           - debug
-        required: true
+          - release
+          - published
+        required: false
         default: 'debug'
       linuxTargetPlatforms:
         description: '[Android, iOS, StandaloneOSX, StandaloneLinux64, WebGL]'
         type: string
-        required: true
-        default: 'WebGL'
+        required: false
+        default: ''
       windowTargetPlatforms:
         description: '[StandaloneWindows, WSAPlayer]'
         type: string
         required: false
         default: ''
-      win64TargetPlatform:
+      win64TargetPlatforms:
         description: '[StandaloneWindows64]'
         type: string
         required: false
@@ -41,31 +42,57 @@ jobs:
     name: 设置默认值
     runs-on: ubuntu-latest
     env:
+      releaseMode: ${{ github.event.inputs.releaseMode }}
       linuxTargetPlatforms: ${{ github.event.inputs.linuxTargetPlatforms }}
       windowTargetPlatforms: ${{ github.event.inputs.windowTargetPlatforms }}
-      win64TargetPlatform: ${{ github.event.inputs.win64TargetPlatform }}
+      win64TargetPlatforms: ${{ github.event.inputs.win64TargetPlatforms }}
     steps:
       -
-        name: 判断是否有输入值
-        id: check
+        name: 发布模式设定默认值
+        if: github.event.action == 'published'  || github.event.inputs.releaseMode == 'published'
         run: |
-          echo 输入值为 "$linuxTargetPlatforms"
-          if [ "$linuxTargetPlatforms" == "" ]; then
-            echo 并没有检测到输入值
-            echo "::set-output name=linuxTargetPlatforms::'WebGL'"
-          else
-            echo 检测到有输入值
-            array=(${linuxTargetPlatforms//, / })
-            echo "::set-output name=linuxTargetPlatforms::$array"
-            for var in ${array[@]}
-            do
-              echo $var
-            done
+          echo "releaseMode='published'" >> $GITHUB_ENV
+          echo "linuxTargetPlatforms='Android, iOS, StandaloneOSX, StandaloneLinux64, WebGL'" >> $GITHUB_ENV
+          echo "windowTargetPlatforms='StandaloneWindows, WSAPlayer'" >> $GITHUB_ENV
+          echo "win64TargetPlatforms='StandaloneWindows64'" >> $GITHUB_ENV
+      -
+        name: 非发布模式设定默认值
+        if: !(github.event.action == 'published'  || github.event.inputs.releaseMode == 'published')
+        run: |
+          if [ "$releaseMode" = "" ]; then
+            echo "releaseMode='debug'" >> $GITHUB_ENV
           fi
-          echo 完成   
-      - 
-        name: 转换为数组
-        env:
-          log: ${{ toJSON(steps.check.outputs.linuxTargetPlatforms) }}
+          if [ "$linuxTargetPlatforms" = "" ]; then
+            echo "linuxTargetPlatforms='WebGL'" >> $GITHUB_ENV
+          fi
+      -
+        name: linuxTargetPlatforms 转换为数组
+        uses: jungwinter/split@v2
+        id: linuxTargetPlatforms
+        with:
+          msg: ${{ env.linuxTargetPlatforms }}
+          separator: ', '
+      -
+        name: windowTargetPlatforms 转换为数组
+        uses: jungwinter/split@v2
+        id: windowTargetPlatforms
+        with:
+          msg: ${{ env.windowTargetPlatforms }}
+          separator: ', '
+      -
+        name: win64TargetPlatforms 转换为数组
+        uses: jungwinter/split@v2
+        id: win64TargetPlatforms
+        with:
+          msg: ${{ env.win64TargetPlatforms }}
+          separator: ', '
+      -
+        name: 打印
+        env: 
+          log_linuxTargetPlatforms: ${{ toJSON(steps.linuxTargetPlatforms.outputs._[*]) }}
+          log_windowTargetPlatforms: ${{ toJSON(steps.windowTargetPlatforms.outputs._[*]) }}
+          log_win64TargetPlatforms: ${{ toJSON(steps.win64TargetPlatforms.outputs._[*]) }}
         run: |
-          echo $log
+          echo $log_linuxTargetPlatforms
+          echo $log_windowTargetPlatforms
+          echo $log_win64TargetPlatforms 
