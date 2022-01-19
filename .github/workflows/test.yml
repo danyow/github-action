@@ -39,7 +39,7 @@ on:
 jobs:
   
   setDefaultOptions:
-    name: 设置默认值
+    name: 设置 ${{ matrix.name }} 默认值
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -83,7 +83,7 @@ jobs:
         run: |
           if [ "$TARGET_VALUE" = "" ]; then
             if [ "$TARGET_DEBUG" = "" ]; then
-              echo "TARGET_VALUE=' '" >> $GITHUB_ENV
+              echo "TARGET_JSON=[]" >> $GITHUB_ENV
             else
               echo "TARGET_VALUE=$TARGET_DEBUG" >> $GITHUB_ENV
             fi
@@ -91,15 +91,19 @@ jobs:
       -
         name: ${{ matrix.name }} 转换为数组
         uses: kanga333/json-array-builder@main
+        if: env.TARGET_VALUE == ''
         id: toJSON
         with:
           str: ${{ env.TARGET_VALUE }}
           separator: ', '
       -
         name: 打印
+        if: env.TARGET_VALUE == ''
         env:
-          TARGET_JSON: ${{ toJSON(steps.toJSON.outputs.build) }}
+          JSON: ${{ toJSON(steps.toJSON.outputs.build) }}
         run: |
+          echo "TARGET_JSON=$JSON" >> $GITHUB_ENV
           echo $TARGET_JSON
+    
     outputs:
-      json: ${{ toJSON(steps.toJSON.outputs.build) }}
+      json: env.TARGET_JSON
