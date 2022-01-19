@@ -65,6 +65,13 @@ jobs:
           if [ "$linuxTargetPlatforms" = "" ]; then
             echo "linuxTargetPlatforms='WebGL'" >> $GITHUB_ENV
           fi
+          if [ "$windowTargetPlatforms" = "" ]; then
+            echo "windowTargetPlatforms=' '" >> $GITHUB_ENV
+          fi
+          if [ "$win64TargetPlatforms" = "" ]; then
+            echo "win64TargetPlatforms=' '" >> $GITHUB_ENV
+          fi
+          
       -
         name: linuxTargetPlatforms 转换为数组
         uses: kanga333/json-array-builder@main
