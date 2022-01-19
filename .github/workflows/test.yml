@@ -56,7 +56,7 @@ jobs:
           else
             echo 检测到有输入值
             array=(${linuxTargetPlatforms//, / })
-            echo "::set-output name=linuxTargetPlatforms::$array)"
+            echo "::set-output name=linuxTargetPlatforms::$array"
             for var in ${array[@]}
             do
               echo $var
