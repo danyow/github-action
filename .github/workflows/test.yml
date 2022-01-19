@@ -49,7 +49,7 @@ jobs:
     steps:
       -
         name: 发布模式设定默认值
-        if: github.event.action == 'published'  || github.event.inputs.releaseMode == 'published'
+        if: github.event.action == 'published' || github.event.inputs.releaseMode == 'published'
         run: |
           echo "releaseMode='published'" >> $GITHUB_ENV
           echo "linuxTargetPlatforms='Android, iOS, StandaloneOSX, StandaloneLinux64, WebGL'" >> $GITHUB_ENV
@@ -57,7 +57,7 @@ jobs:
           echo "win64TargetPlatforms='StandaloneWindows64'" >> $GITHUB_ENV
       -
         name: 非发布模式设定默认值
-        if: !(github.event.action == 'published'  || github.event.inputs.releaseMode == 'published')
+        if: github.event.action != 'published' && github.event.inputs.releaseMode != 'published'
         run: |
           if [ "$releaseMode" = "" ]; then
             echo "releaseMode='debug'" >> $GITHUB_ENV
@@ -88,7 +88,7 @@ jobs:
           separator: ', '
       -
         name: 打印
-        env: 
+        env:
           log_linuxTargetPlatforms: ${{ toJSON(steps.linuxTargetPlatforms.outputs._[*]) }}
           log_windowTargetPlatforms: ${{ toJSON(steps.windowTargetPlatforms.outputs._[*]) }}
           log_win64TargetPlatforms: ${{ toJSON(steps.win64TargetPlatforms.outputs._[*]) }}
