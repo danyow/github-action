@@ -41,9 +41,9 @@ jobs:
     name: 设置默认值
     runs-on: ubuntu-latest
     env:
-      linuxTargetPlatforms: ${{ github.event.input.linuxTargetPlatforms }}
-      windowTargetPlatforms: ${{ github.event.input.windowTargetPlatforms }}
-      win64TargetPlatform: ${{ github.event.input.win64TargetPlatform }}
+      linuxTargetPlatforms: ${{ github.event.inputs.linuxTargetPlatforms }}
+      windowTargetPlatforms: ${{ github.event.inputs.windowTargetPlatforms }}
+      win64TargetPlatform: ${{ github.event.inputs.win64TargetPlatform }}
     steps:
       -
         name: 判断是否有输入值
@@ -62,4 +62,4 @@ jobs:
               echo $var
             done
           fi
-          echo 完成
+          echo 完成      
