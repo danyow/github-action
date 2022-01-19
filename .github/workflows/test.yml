@@ -52,12 +52,12 @@ jobs:
           -
             name: windowTargetPlatforms
             publish: 'StandaloneWindows, WSAPlayer'
-            debug: ' '
+            debug: ''
             value: ${{ github.event.inputs.windowTargetPlatforms }}
           -
             name: win64TargetPlatforms
             publish: 'StandaloneWindows64'
-            debug: ' '
+            debug: ''
             value: ${{ github.event.inputs.win64TargetPlatforms }}
     env:
       TARGET_NAME: ${{ matrix.name }}
@@ -82,7 +82,11 @@ jobs:
         if: github.event.action != 'published' && github.event.inputs.releaseMode != 'published'
         run: |
           if [ "$TARGET_VALUE" = "" ]; then
-            echo "TARGET_VALUE=$TARGET_DEBUG" >> $GITHUB_ENV
+            if [ "$TARGET_DEBUG" = "" ]; then
+              echo "TARGET_VALUE=' '" >> $GITHUB_ENV
+            else
+              echo "TARGET_VALUE=$TARGET_DEBUG" >> $GITHUB_ENV
+            fi
           fi
       -
         name: ${{ matrix.name }} 转换为数组
