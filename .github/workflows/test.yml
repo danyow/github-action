@@ -67,21 +67,21 @@ jobs:
           fi
       -
         name: linuxTargetPlatforms 转换为数组
-        uses: kanga333/json-array-builder@master
+        uses: kanga333/json-array-builder@main
         id: linuxTargetPlatforms
         with:
           str: ${{ env.linuxTargetPlatforms }}
           separator: ', '
       -
         name: windowTargetPlatforms 转换为数组
-        uses: kanga333/json-array-builder@master
+        uses: kanga333/json-array-builder@main
         id: windowTargetPlatforms
         with:
           str: ${{ env.windowTargetPlatforms }}
           separator: ', '
       -
         name: win64TargetPlatforms 转换为数组
-        uses: kanga333/json-array-builder@master
+        uses: kanga333/json-array-builder@main
         id: win64TargetPlatforms
         with:
           str: ${{ env.win64TargetPlatforms }}
