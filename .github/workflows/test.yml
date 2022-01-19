@@ -9,6 +9,17 @@ on:
         description: '工作流模式 [release, debug] [Android, iOS, StandaloneOSX, StandaloneLinux64, WebGL, StandaloneWindows, WSAPlayer, StandaloneWindows64, Steam]'
         required: true
         default: 'debug, WebGL'
+        type: choice
+        options:
+          - Android
+          - iOS
+          - StandaloneOSX
+          - StandaloneLinux64
+          - WebGL
+          - StandaloneWindows
+          - WSAPlayer
+          - StandaloneWindows64
+          - Steam
 jobs:
   
   set_default_options:
