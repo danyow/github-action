@@ -98,4 +98,4 @@ jobs:
         run: |
           echo $TARGET_JSON
     outputs:
-      ${{ matrix.name }}: ${{ toJSON(steps.toJSON.outputs.build) }}
+      json: ${{ toJSON(steps.toJSON.outputs.build) }}
