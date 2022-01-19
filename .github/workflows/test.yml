@@ -48,17 +48,17 @@ jobs:
             name: linuxTargetPlatforms
             publish: 'Android, iOS, StandaloneOSX, StandaloneLinux64, WebGL'
             debug: 'WebGL'
-            value: $ {{ github.event.inputs.linuxTargetPlatforms }}
+            value: ${{ github.event.inputs.linuxTargetPlatforms }}
           -
             name: windowTargetPlatforms
             publish: 'StandaloneWindows, WSAPlayer'
             debug: ' '
-            value: $ {{ github.event.inputs.windowTargetPlatforms }}
+            value: ${{ github.event.inputs.windowTargetPlatforms }}
           -
             name: win64TargetPlatforms
             publish: 'StandaloneWindows64'
             debug: ' '
-            value: $ {{ github.event.inputs.win64TargetPlatforms }}
+            value: ${{ github.event.inputs.win64TargetPlatforms }}
     env:
       TARGET_NAME: ${{ matrix.name }}
       TARGET_VALUE: ${{ matrix.value }}
