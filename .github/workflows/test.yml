@@ -20,6 +20,11 @@ on:
           - WSAPlayer
           - StandaloneWindows64
           - Steam
+      linuxTargetPlatforms:
+        description: '[Android, iOS, StandaloneOSX, StandaloneLinux64, WebGL]'
+        type: string
+        required: true
+        default: '- Android\n- iOS\n'
 jobs:
   
   set_default_options:
