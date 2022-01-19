@@ -89,9 +89,9 @@ jobs:
       -
         name: 打印
         env:
-          log_linuxTargetPlatforms: ${{ toJSON(steps.linuxTargetPlatforms.outputs._[*]) }}
-          log_windowTargetPlatforms: ${{ toJSON(steps.windowTargetPlatforms.outputs._[*]) }}
-          log_win64TargetPlatforms: ${{ toJSON(steps.win64TargetPlatforms.outputs._[*]) }}
+          log_linuxTargetPlatforms: ${{ toJSON(steps.linuxTargetPlatforms.outputs) }}
+          log_windowTargetPlatforms: ${{ toJSON(steps.windowTargetPlatforms.outputs) }}
+          log_win64TargetPlatforms: ${{ toJSON(steps.win64TargetPlatforms.outputs) }}
         run: |
           echo $log_linuxTargetPlatforms
           echo $log_windowTargetPlatforms
