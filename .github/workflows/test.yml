@@ -38,68 +38,64 @@ on:
         default: ''
 jobs:
   
-  set_default_options:
+  setDefaultOptions:
     name: 设置默认值
     runs-on: ubuntu-latest
-    env:
-      releaseMode: ${{ github.event.inputs.releaseMode }}
-      linuxTargetPlatforms: ${{ github.event.inputs.linuxTargetPlatforms }}
-      windowTargetPlatforms: ${{ github.event.inputs.windowTargetPlatforms }}
-      win64TargetPlatforms: ${{ github.event.inputs.win64TargetPlatforms }}
+    strategy:
+      matrix:
+        include:
+          -
+            name: linuxTargetPlatforms
+            publish: 'Android, iOS, StandaloneOSX, StandaloneLinux64, WebGL'
+            debug: 'WebGL'
+            value: github.event.inputs.linuxTargetPlatforms
+          -
+            name: windowTargetPlatforms
+            publish: 'StandaloneWindows, WSAPlayer'
+            debug: ' '
+            value: github.event.inputs.windowTargetPlatforms
+          -
+            name: win64TargetPlatforms
+            publish: 'StandaloneWindows64'
+            debug: ' '
+            value: github.event.inputs.win64TargetPlatforms
     steps:
+      -
+        name: 设定环境变量
+        env:
+          TARGET_NAME: ${{ matrix.name }}
+          TARGET_VALUE: ${{ matrix.value }}
+          TARGET_PUBLISH: ${{ matrix.publish }}
+          TARGET_DEBUG: ${{ matrix.debug }}
+        run: |
+          echo $TARGET_NAME
+          echo $TARGET_VALUE
+          echo $TARGET_PUBLISH
+          echo $TARGET_DEBUG
       -
         name: 发布模式设定默认值
         if: github.event.action == 'published' || github.event.inputs.releaseMode == 'published'
         run: |
-          echo "releaseMode='published'" >> $GITHUB_ENV
-          echo "linuxTargetPlatforms='Android, iOS, StandaloneOSX, StandaloneLinux64, WebGL'" >> $GITHUB_ENV
-          echo "windowTargetPlatforms='StandaloneWindows, WSAPlayer'" >> $GITHUB_ENV
-          echo "win64TargetPlatforms='StandaloneWindows64'" >> $GITHUB_ENV
+          echo "TARGET_VALUE=$TARGET_PUBLISH" >> $GITHUB_ENV
       -
         name: 非发布模式设定默认值
         if: github.event.action != 'published' && github.event.inputs.releaseMode != 'published'
         run: |
-          if [ "$releaseMode" = "" ]; then
-            echo "releaseMode='debug'" >> $GITHUB_ENV
+          if [ "$TARGET_VALUE" = "" ]; then
+            echo "TARGET_VALUE=$TARGET_DEBUG" >> $GITHUB_ENV
           fi
-          if [ "$linuxTargetPlatforms" = "" ]; then
-            echo "linuxTargetPlatforms='WebGL'" >> $GITHUB_ENV
-          fi
-          if [ "$windowTargetPlatforms" = "" ]; then
-            echo "windowTargetPlatforms=' '" >> $GITHUB_ENV
-          fi
-          if [ "$win64TargetPlatforms" = "" ]; then
-            echo "win64TargetPlatforms=' '" >> $GITHUB_ENV
-          fi
-          
       -
-        name: linuxTargetPlatforms 转换为数组
+        name: ${{ matrix.name }} 转换为数组
         uses: kanga333/json-array-builder@main
-        id: linuxTargetPlatforms
+        id: ${{ matrix.name }}
         with:
-          str: ${{ env.linuxTargetPlatforms }}
-          separator: ', '
-      -
-        name: windowTargetPlatforms 转换为数组
-        uses: kanga333/json-array-builder@main
-        id: windowTargetPlatforms
-        with:
-          str: ${{ env.windowTargetPlatforms }}
-          separator: ', '
-      -
-        name: win64TargetPlatforms 转换为数组
-        uses: kanga333/json-array-builder@main
-        id: win64TargetPlatforms
-        with:
-          str: ${{ env.win64TargetPlatforms }}
+          str: ${{ env.TARGET_VALUE }}
           separator: ', '
       -
         name: 打印
         env:
-          log_linuxTargetPlatforms: ${{ toJSON(steps.linuxTargetPlatforms.outputs.build) }}
-          log_windowTargetPlatforms: ${{ toJSON(steps.windowTargetPlatforms.outputs.build) }}
-          log_win64TargetPlatforms: ${{ toJSON(steps.win64TargetPlatforms.outputs.build) }}
+          TARGET_JSON: ${{ toJSON(steps.${{ matrix.name }}.outputs.build) }}
         run: |
-          echo $log_linuxTargetPlatforms
-          echo $log_windowTargetPlatforms
-          echo $log_win64TargetPlatforms 
+          echo $TARGET_JSON
+    outputs:
+      ${{ matrix.name }}: ${{ toJSON(steps.${{ matrix.name }}.outputs.build) }}
