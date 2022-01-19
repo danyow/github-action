@@ -59,14 +59,14 @@ jobs:
             publish: 'StandaloneWindows64'
             debug: ' '
             value: github.event.inputs.win64TargetPlatforms
+    env:
+      TARGET_NAME: ${{ matrix.name }}
+      TARGET_VALUE: ${{ matrix.value }}
+      TARGET_PUBLISH: ${{ matrix.publish }}
+      TARGET_DEBUG: ${{ matrix.debug }}
     steps:
       -
-        name: 设定环境变量
-        env:
-          TARGET_NAME: ${{ matrix.name }}
-          TARGET_VALUE: ${{ matrix.value }}
-          TARGET_PUBLISH: ${{ matrix.publish }}
-          TARGET_DEBUG: ${{ matrix.debug }}
+        name: 查看环境变量
         run: |
           echo $TARGET_NAME
           echo $TARGET_VALUE
