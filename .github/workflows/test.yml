@@ -62,4 +62,10 @@ jobs:
               echo $var
             done
           fi
-          echo 完成      
+          echo 完成   
+      - 
+        name: 转换为数组
+        env:
+          log: ${{ toJSON(steps.check.outputs.linuxTargetPlatforms) }}
+        run: |
+          echo $log
