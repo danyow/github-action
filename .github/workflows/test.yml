@@ -87,15 +87,15 @@ jobs:
       -
         name: ${{ matrix.name }} 转换为数组
         uses: kanga333/json-array-builder@main
-        id: ${{ matrix.name }}
+        id: toJSON
         with:
           str: ${{ env.TARGET_VALUE }}
           separator: ', '
       -
         name: 打印
         env:
-          TARGET_JSON: ${{ toJSON(steps.${{ matrix.name }}.outputs.build) }}
+          TARGET_JSON: ${{ toJSON(steps.toJSON.outputs.build) }}
         run: |
           echo $TARGET_JSON
     outputs:
-      ${{ matrix.name }}: ${{ toJSON(steps.${{ matrix.name }}.outputs.build) }}
+      ${{ matrix.name }}: ${{ toJSON(steps.toJSON.outputs.build) }}
